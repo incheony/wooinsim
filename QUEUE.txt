@@ -1,0 +1,139 @@
+import sys
+
+MAX_QSIZE = 10  
+class CircularQueue:
+    
+    global MAX_QSIZE
+    
+    def __init__(self):
+        self.front = 0
+        self.rear = 0
+        self.items = [None] * MAX_QSIZE
+                
+    def isEmpty(self):
+        return self.front == self.rear
+       
+    def isFull(self):
+        return self.front == (self.rear+1)%MAX_QSIZE
+ 
+    #def clear(self):
+    #    self.front = self.rear
+    
+    def enqueue(self, item):
+        if not self.isFull():
+            self.rear = (self.rear+1)%MAX_QSIZE
+            self.items[self.rear] = item
+        else:
+            print("overflow")
+            return sys.exit()
+        
+    def dequeue(self):
+        if not self.isEmpty():
+            dequeue = self.items[self.front+1]
+            self.items[self.front+1] = None
+            self.front = (self.front+1)%MAX_QSIZE
+            return dequeue
+        else:
+            print('underflow')
+            return sys.exit()
+ 
+    #def peek(self):
+    #    if self.isEmpty():
+    #        return self.items[(self.front + 1) % MAX_QSIZE]
+
+    #def size(self):
+    #    return (self.rear - self.front + MAX_QSIZE) % MAX_QSIZE
+    
+    def display(self):
+        out = []
+        if self.front < self.rear:
+            out = self.items[self.front+1:self.rear+1]
+            
+        else:
+            out = self.items[self.front+1:MAX_QSIZE] + \
+            self.items[0:self.rear+1]
+        
+        result = [0 if x==None else x for x in self.items]
+        print('result', result)
+        print("[f=%s, r=%d] ==>"%(self.front, self.rear), out)
+        #print("self.items", self.items)
+
+MAX_QSIZE = int(input())
+cq = CircularQueue()
+
+n = int(input())
+for i in range(n):
+    command = input().split(' ')
+    if (command[0] == 'I'):
+        cq.enqueue(command[1])
+    elif (command[0] == 'D'):
+        print(cq.dequeue())
+    elif (command[0] == 'P'):
+        cq.display()       
+        
+
+
+
+###
+class CircularQueue():
+    def __init__(self, max = 6):
+        self.max = max
+        self.queue = [None]*self.max
+        self.size = self.front = 0
+        self.rear = None
+    def is_empty(self):
+        return self.size == 0
+    def is_full(self):
+        if self.rear == None:
+            return False
+        return self.next_index(self.rear) == self.front
+    def next_index(self, idx):
+        return (idx+1)%self.max
+    def enqueue(self, data):
+        if self.is_full():
+            raise Exception("Queue is Full")
+        # 시작 index를 0으로 함
+        if self.rear == None:
+            self.rear = 1
+        else:
+            self.rear = self.next_index(self.rear)
+        self.queue[self.rear] = data
+        self.size += 1
+        return self.queue[self.rear]
+    def deque(self):
+        if self.is_empty():
+            raise Exception('Queue is empty')
+        self.queue[self.front+1] = None
+        self.front = self.next_index(self.front)
+        return self.queue[self.front]
+    def display(self):
+        print(self.queue)
+
+cq = CircularQueue()
+cq.display()
+print(cq.enqueue(10))
+print(cq.enqueue(20))
+cq.display()
+print(cq.enqueue(30))
+print(cq.enqueue(40))
+print(cq.deque())
+cq.display()
+print(cq.enqueue(50))
+print(cq.enqueue(60))
+print(cq.enqueue(70))
+
+
+cq = CircularQueue()
+cq.display()
+print(cq.enqueue(1))
+print(cq.enqueue(2))
+print(cq.enqueue(3))
+print(cq.enqueue(4))
+cq.display()
+print(cq.deque())
+print(cq.deque())
+cq.display()
+print(cq.enqueue(5))
+print(cq.enqueue(6))
+print(cq.deque())
+
