@@ -1,0 +1,108 @@
+# =======================================================
+# 1차(실습) 평가
+# =======================================================
+
+# 1) 대상 디렉토리를 기준으로 모든 하위 디렉토리를 함수 중에 os.walk() 함수가 있다. 
+# walk() 함수를 사용하는 사례와 동작방식에 대해서 기술하세요.
+
+"""
+- walk() 함수를 사용하는 사례 :: 디렉토리와 파일을 검색하는 경우 사용함
+
+이전에는 os.listdir이나 glob 같은걸 써서 재귀호출(recursive call)로 특정 디렉토리 아래의 모든 폴더를 순환하며 파일 이름을 모으는 코드를 만들곤 했었는데, 이는 순전히 무식해서 고생한 거였다. Python의 기본 모듈인 os.walk가 이런 역활을 하도록 이미 구
+
+
+- 동작방식
+os.walk는 특정 디렉토리 아래의 모든 디렉토리와 파일의 목록을 얻어 올 수 있도록 도와준다. 이터레이션(for문)에서 3개의 아이템으로 구성된 튜플로 분해가 가능한데 이름만으로도 무엇인지 알 수 있다. root는 어떤 디렉토리인지, dirs는 root 아래의 디렉토리 목록, 그리고 files는 root 아래의 파일 목록이다. 모든 목록은 리스트 형태이다.
+
+필요하다면 디렉토리 목록도 만들 수 있고 파일 목록도 만들 수 있고 정말 활용하기 편하다.
+
+"""
+
+
+
+
+os.walk()는 하위의 폴더들을 for문으로 탐색할 수 있게 해줍니다. 인자로 전달된 path에 대해서 다음 3개의 값이 있는 tuple을 넘겨줍니다.
+
+root : dir과 files가 있는 path
+dirs : root 아래에 있는 폴더들
+files : root 아래에 있는 파일들
+예제는 다음과 같습니다. 모든 하위 폴더들에 대해서 for문이 실행되며, root는 그 폴더의 path가 됩니다. dirs와 files는 root 바로 밑에 있는 폴더와 파일들에 대한 리스트입니다.
+
+
+기본적으로 top-down 순서로 출력됩니다. 최하위 폴더에서 상위 폴더를 출력하는 bottom-up으로 탐색하고 싶다면 다음과 같이 topdown=False를 인자를 전달하면 됩니다.
+
+
+# 2) 자막파일의 순번라인과 타이밍정보를 포함한 라인을 식별하기 위해 정규식을 사용할 수 있다. 
+#    순번라인을 식별하는 정규식과 타이밍정보라인을 식별하는 정규식을 
+#    각각 re.compile() 의 인자로 들어갈 수 있게 로우(raw) 스트링으로 작성하세요.
+
+
+# 3) 아래 코드를 참조하여 자막파일에서 자막내용만을 추출하여 다시 파일로 쓰는 코드를 완성하세요. 
+#    단, 자막파일과 같은 경로에 자막내용만 추출된 파일을 자막파일명.txt 로 저장하세요.
+
+
+
+import glob
+import os
+import re
+
+def get_subtitle(file_name):
+    print('[+] 작업중인 파일명 :', file_name) #####
+    sub_title_content = []
+
+    tmp_line = ''
+    
+    
+    file = open(file_name)
+    
+    
+    # 파일을 열기 #############
+    # file = open(file_name) #############
+    #file = open(file_name, 'rt', encoding='UTF8') #############
+    # 검사할 정규식 정의 #############
+    regx = re.compile(r'\d*\n') #############
+    time = re.compile(r'(\d{2}:\d{2}:\d{2})') #############
+    temp = re.compile(r"'\n'|' '") #############
+    
+    
+    
+    for line in file:
+    ## //TODO 여기를 작성하여 코드를 완성하세요
+    # print('[+] 작업중인 라인1 :',line)
+        if not (regx.match(line) or time.search(line) or temp.match(line)):
+            sub_title_content += line
+    return sub_title_content
+
+
+def make_file_and_save(content, file_name, ext='txt'):
+    file = open(file_name + '.' + ext, 'a')
+    for line in content:
+        file.write('%s\n' % line)
+    file.close()
+    
+def clear_dir():
+    file_list = glob.glob('*')
+    for item in file_list:
+        if item.endswith('.txt'):
+            os.remove(item)
+
+def main():
+    os.chdir('./Intro to Data Analysis Subtitles')
+    dir_list = glob.glob('*')
+    os.chdir('./' + dir_list[0])
+    print('current dir is : ' + os.getcwd())
+    
+    #
+    clear_dir()
+    subtitle_list = glob.glob('*.srt')
+    for file_name in subtitle_list:
+        print(file_name, "is working..")
+        subtitle_content = get_subtitle(file_name)
+        make_file_and_save(subtitle_content, file_name, 'txt')
+    print('job completed..')
+
+
+if __name__ == '__main__':
+    main()
+
+https://shut-down.tistory.com/73
