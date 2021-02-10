@@ -1,0 +1,18 @@
+The final task is to do some kind of transfer learning using ECG data.
+When building the model, use the one from the following link.
+https://www.physionet.org/content/ludb/1.0.0/
+
+Download the attached npy.zip file and use it as a test set to evaluate the performance.
+
+The npy.zip file is labeled with the following folders:
+
+Normal: Normal ECG
+E-01: event occurrence 1
+E-02: event occurrence 2
+
+The purpose is to create a model that determines E-01 or E-02 as abnormal with Normal as normal using the above files as test set. It doesn't matter which metrics you use. Also, it doesn't matter what machine learning model you use. You can use various models, but please specify the reference and source and analyze and consider in the report.
+
+Please submit in the following format.
+-Submit code to *.ipynb file running on google colab (including data loading and preprocessing part)
+
+-Any library can be used as long as it is importable from google colab.
